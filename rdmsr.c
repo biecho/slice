@@ -34,11 +34,9 @@
 
 /* Number of decimal digits for a certain number of bits */
 /* (int) ceil(log(2^n)/log(10)) */
-int decdigits[] = {1,  1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  4,  4,
-                   4,  5,  5,  5,  6,  6,  6,  7,  7,  7,  7,  8,  8,
-                   8,  9,  9,  9,  10, 10, 10, 10, 11, 11, 11, 12, 12,
-                   12, 13, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16,
-                   16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 19, 20};
+int decdigits[] = { 1,	1,  1,	1,  2,	2,  2,	3,  3,	3,  4,	4,  4,	4,  5,	5,  5,	6,  6,	6,  7,	7,
+		    7,	7,  8,	8,  8,	9,  9,	9,  10, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 13, 13,
+		    14, 14, 14, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 19, 20 };
 
 #define mo_hex 0x01
 #define mo_dec 0x02
@@ -81,16 +79,17 @@ int dir_filter(const struct dirent *dirp);
 /*		return 0;*/
 /*}*/
 
-void rdmsr_on_all_cpus(uint32_t reg) {
-    struct dirent **namelist;
-    int dir_entries;
+void rdmsr_on_all_cpus(uint32_t reg)
+{
+	struct dirent **namelist;
+	int dir_entries;
 
-    dir_entries = scandir("/dev/cpu", &namelist, dir_filter, 0);
-    while (dir_entries--) {
-        rdmsr_on_cpu(reg, atoi(namelist[dir_entries]->d_name));
-        free(namelist[dir_entries]);
-    }
-    free(namelist);
+	dir_entries = scandir("/dev/cpu", &namelist, dir_filter, 0);
+	while (dir_entries--) {
+		rdmsr_on_cpu(reg, atoi(namelist[dir_entries]->d_name));
+		free(namelist[dir_entries]);
+	}
+	free(namelist);
 }
 
 /*unsigned int highbit = 63, lowbit = 0;*/
@@ -181,90 +180,92 @@ void rdmsr_on_all_cpus(uint32_t reg) {
 /*	exit(0);*/
 /*}*/
 
-uint64_t rdmsr_on_cpu(uint32_t reg, int cpu) {
-    uint64_t data;
-    int fd;
-    // char *pat;
-    // int width;
-    char msr_file_name[64];
-    /*	unsigned int bits;*/
+uint64_t rdmsr_on_cpu(uint32_t reg, int cpu)
+{
+	uint64_t data;
+	int fd;
+	// char *pat;
+	// int width;
+	char msr_file_name[64];
+	/*	unsigned int bits;*/
 
-    sprintf(msr_file_name, "/dev/cpu/%d/msr", cpu);
-    fd = open(msr_file_name, O_RDONLY);
-    if (fd < 0) {
-        if (errno == ENXIO) {
-            fprintf(stderr, "rdmsr: No CPU %d\n", cpu);
-            exit(2);
-        } else if (errno == EIO) {
-            fprintf(stderr, "rdmsr: CPU %d doesn't support MSRs\n", cpu);
-            exit(3);
-        } else {
-            perror("rdmsr: open");
-            exit(127);
-        }
-    }
+	sprintf(msr_file_name, "/dev/cpu/%d/msr", cpu);
+	fd = open(msr_file_name, O_RDONLY);
+	if (fd < 0) {
+		if (errno == ENXIO) {
+			fprintf(stderr, "rdmsr: No CPU %d\n", cpu);
+			exit(2);
+		} else if (errno == EIO) {
+			fprintf(stderr, "rdmsr: CPU %d doesn't support MSRs\n", cpu);
+			exit(3);
+		} else {
+			perror("rdmsr: open");
+			exit(127);
+		}
+	}
 
-    if (pread(fd, &data, sizeof data, reg) != sizeof data) {
-        if (errno == EIO) {
-            fprintf(stderr,
-                    "rdmsr: CPU %d cannot read "
-                    "MSR 0x%08" PRIx32 "\n",
-                    cpu, reg);
-            exit(4);
-        } else {
-            perror("rdmsr: pread");
-            exit(127);
-        }
-    }
+	if (pread(fd, &data, sizeof data, reg) != sizeof data) {
+		if (errno == EIO) {
+			fprintf(stderr,
+				"rdmsr: CPU %d cannot read "
+				"MSR 0x%08" PRIx32 "\n",
+				cpu, reg);
+			exit(4);
+		} else {
+			perror("rdmsr: pread");
+			exit(127);
+		}
+	}
 
-    close(fd);
+	close(fd);
 
-    return data;
+	return data;
 }
 
-uint64_t rdmsr_on_cpu_0(uint32_t reg) {
-    uint64_t data;
-    int cpu = 0;
+uint64_t rdmsr_on_cpu_0(uint32_t reg)
+{
+	uint64_t data;
+	int cpu = 0;
 
-    // char *pat;
-    // int width;
-    char *msr_file_name = "/dev/cpu/0/msr";
-    /*	unsigned int bits;*/
+	// char *pat;
+	// int width;
+	char *msr_file_name = "/dev/cpu/0/msr";
+	/*	unsigned int bits;*/
 
-    // sprintf(msr_file_name, "/dev/cpu/%d/msr", cpu);
+	// sprintf(msr_file_name, "/dev/cpu/%d/msr", cpu);
 
-    static int fd = -1;
+	static int fd = -1;
 
-    if (fd < 0) {
-        fd = open(msr_file_name, O_RDONLY);
-        if (fd < 0) {
-            if (errno == ENXIO) {
-                fprintf(stderr, "rdmsr: No CPU %d\n", cpu);
-                exit(2);
-            } else if (errno == EIO) {
-                fprintf(stderr, "rdmsr: CPU %d doesn't support MSRs\n", cpu);
-                exit(3);
-            } else {
-                perror("rdmsr: open");
-                exit(127);
-            }
-        }
-    }
+	if (fd < 0) {
+		fd = open(msr_file_name, O_RDONLY);
+		if (fd < 0) {
+			if (errno == ENXIO) {
+				fprintf(stderr, "rdmsr: No CPU %d\n", cpu);
+				exit(2);
+			} else if (errno == EIO) {
+				fprintf(stderr, "rdmsr: CPU %d doesn't support MSRs\n", cpu);
+				exit(3);
+			} else {
+				perror("rdmsr: open");
+				exit(127);
+			}
+		}
+	}
 
-    if (pread(fd, &data, sizeof data, reg) != sizeof data) {
-        if (errno == EIO) {
-            fprintf(stderr,
-                    "rdmsr: CPU %d cannot read "
-                    "MSR 0x%08" PRIx32 "\n",
-                    cpu, reg);
-            exit(4);
-        } else {
-            perror("rdmsr: pread");
-            exit(127);
-        }
-    }
+	if (pread(fd, &data, sizeof data, reg) != sizeof data) {
+		if (errno == EIO) {
+			fprintf(stderr,
+				"rdmsr: CPU %d cannot read "
+				"MSR 0x%08" PRIx32 "\n",
+				cpu, reg);
+			exit(4);
+		} else {
+			perror("rdmsr: pread");
+			exit(127);
+		}
+	}
 
-    // close(fd);
+	// close(fd);
 
-    return data;
+	return data;
 }

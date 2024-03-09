@@ -20,7 +20,6 @@
  *
  * ----------------------------------------------------------------------- */
 
-
 #ifndef HIDEMINMAX
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
@@ -53,8 +52,7 @@ int same_slice(size_t *hit_histogram);
 unsigned long threads_per_core();
 unsigned long threads_per_package();
 unsigned long cores_per_package();
-unsigned long apicid2coreid(unsigned long apicid, int *map_apicid,
-                            int *map_coreid);
+unsigned long apicid2coreid(unsigned long apicid, int *map_apicid, int *map_coreid);
 int *mapping_coreid();
 int *mapping_apicid();
 unsigned long current_apic(void);

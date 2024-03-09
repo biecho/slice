@@ -19,7 +19,8 @@ reverse: reverse.o util.o poke.o wrmsr.o rdmsr.o monitoring.o arch.o
 scan: monitoring.o scan.o util.o poke.o wrmsr.o rdmsr.o arch.o
 	${CC} -Wall -O0 -g scan.o util.o poke.o wrmsr.o rdmsr.o arch.o monitoring.o -o scan -lm
 
-
-
 clean:
 	rm -f ${LIST} *.o
+
+format:
+	find . -iname '*.h' -o -iname '*.c' | xargs clang-format -i

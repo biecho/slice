@@ -27,23 +27,23 @@
  */
 
 typedef enum {
-    CPU_UNKNOWN,
-    INTEL_CORE,
-    INTEL_XEON,
-    MAX_CLASS,
+	CPU_UNKNOWN,
+	INTEL_CORE,
+	INTEL_XEON,
+	MAX_CLASS,
 } class_t;
 
 typedef enum {
-    UARCH_UNKNOWN,
-    SANDY_BRIDGE,
-    IVY_BRIDGE,
-    HASWELL,
-    BROADWELL,
-    SKYLAKE,
-    KABY_LAKE,
-    SKYLAKE_SP,
-    // COFFEE_LAKE, -> identical in practice to KBL
-    MAX_ARCH,
+	UARCH_UNKNOWN,
+	SANDY_BRIDGE,
+	IVY_BRIDGE,
+	HASWELL,
+	BROADWELL,
+	SKYLAKE,
+	KABY_LAKE,
+	SKYLAKE_SP,
+	// COFFEE_LAKE, -> identical in practice to KBL
+	MAX_ARCH,
 } uarch_t;
 
 extern const char *const classes_names[MAX_CLASS];
